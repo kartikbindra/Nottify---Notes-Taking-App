@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <title>Permalist</title>
+</head>
+
+<body>
+  <main>
+
+  <div class="box" id="heading">
+    <h1>
+      <%= listTitle %>
+    </h1>
+  </div>
+  <div class="box">
+    <% for(let item of listItems){%>
+      <div class="item">
+        <form action="/delete" method="post">
+          <input type="checkbox" onchange="this.form.submit()" name="deleteItemTitle" value="<%= item.title %>">
+        </form>
+
+        <p id="title<%=item.title%>">
+          <b><%= item.title %></b>
+        </p>
+        <p id="data<%=item.title%>">
+          <%= item.data %>
+        </p>
+
+        <form class="edit" action="/edit" method="post">
+          <input id="inputTitle<%=item.title%>" type="text" name="updatedItemTitle" value="<%= item.title %>" autocomplete="off"
+            autofocus="true" hidden="true" />
+          <input id="inputData<%=item.title%>" type="text" name="updatedItemData" value="<%= item.data %>" autocomplete="off"
+            autofocus="true" hidden="true" />
+          <button id="done<%=item.title%>" class="edit" type="submit" hidden><img class="icon"
+              src="/assets/icons/check-solid.svg" alt="tick image"></button>
+        </form>
+        <button id="edit<%=item.title%>" class="edit" onclick="handler('<%=item.title%>')"><img class="icon"
+            src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
+      </div>
+      <% } %>
+
+        <form class="item" action="/add" method="post">
+          <input type="text" name="newTitle" placeholder="Title" autocomplete="off" autofocus="true" />
+          <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
+          <button class="add" type="submit" name="list" value=<%=listTitle %> >+</button>
+        </form>
+  </div>
+
+  <script>
+    function handler(id) {
+      document.getElementById("title" + id).setAttribute("hidden", true)
+      document.getElementById("data" + id).setAttribute("hidden", true)
+      document.getElementById("edit" + id).setAttribute("hidden", true)
+      document.getElementById("done" + id).removeAttribute("hidden")
+      document.getElementById("inputTitle" + id).removeAttribute("hidden")
+      document.getElementById("inputData" + id).removeAttribute("hidden")
+    }
+  </script>
+</main>
+</body>
+
+</html>

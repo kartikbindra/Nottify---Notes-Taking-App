@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, "Public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 
@@ -118,6 +118,11 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.post("/logout", (req, res) => { 
+  res.clearCookie("uid");
+  res.redirect("/login");
+});
+
 app.get("/", async (req, res) => {
   try {
     const uid = req.cookies.uid;
@@ -129,7 +134,7 @@ app.get("/", async (req, res) => {
     catch(e){
       console.log(e);
     }
-    const result = await db.query("SELECT * FROM notes where user_id = $1", [uid]);
+    const result = await db.query("SELECT * FROM notes where user_id = $1 order by note_id ASC", [uid]);
     items = result.rows;
     res.render("index.ejs", {
       listTitle: `${name}'s Notes`,
@@ -148,11 +153,24 @@ app.post("/add", (req, res) => {
   res.redirect("/");
 });
 
-app.post("/edit", (req, res) => {
+app.post("/edit", async (req, res) => {
   const uid = req.cookies.uid;
   const title = req.body.updatedItemTitle;
   const data = req.body.updatedItemData;
-  db.query('update notes set title = $1 , data = $2 where user_id = $3',[title, data, uid]);
+  const noteId = req.cookies.noteId;
+  console.log(uid, title, data, noteId);
+  try{
+    try {
+      await db.query('update notes set title = $1 , data = $2 where note_id = $4 and user_id = $3',[title, data, uid, noteId]);
+      // delete the noteid cookie
+      res.clearCookie("noteId");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  catch(e){
+    console.log(e);
+  }
   res.redirect("/");
 });
 
@@ -161,6 +179,26 @@ app.post("/delete", (req, res) => {
   const title = req.body.deleteItemTitle;
   db.query('delete from notes where title = $2 and user_id = $1 ', [uid, title]);
   res.redirect("/");
+});
+
+app.post("/getNoteId", async (req, res) => {
+  const title = req.body.title;
+  const data = req.body.data;
+  const uid = req.cookies.uid;
+  console.log(uid);
+  console.log(title, data);
+  try{
+    const query = await db.query('select * from notes where title = $1 and data = $2 and user_id = $3', [title, data, uid]);
+    console.log(query.rows);
+    const noteId = query.rows[0].note_id;
+    console.log(noteId);
+    //set noteid cookie
+    res.cookie("noteId", noteId);
+    res.redirect("/");
+  }
+  catch(e){
+    console.log(e);
+  }
 });
 
 app.listen(port, () => {

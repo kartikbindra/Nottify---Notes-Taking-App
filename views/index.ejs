@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles/main.css" />
-  <title>Permalist</title>
+  <title>Nottify - Notes Taking App</title>
 </head>
 
 <body>
@@ -39,8 +39,9 @@
           <button id="done<%=item.title%>" class="edit" type="submit" hidden><img class="icon"
               src="/assets/icons/check-solid.svg" alt="tick image"></button>
         </form>
-        <button id="edit<%=item.title%>" class="edit" onclick="handler('<%=item.title%>')"><img class="icon"
-            src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
+        <button type="submit" id="edit<%=item.title%>" class="edit" onclick="handler('<%=item.title%>', '<%=item.data%>')"><img class="icon"
+            src="/assets/icons/pencil-solid.svg" alt="pencil image" style="height: 15px;">Edit</button>
+        
       </div>
       <% } %>
 
@@ -49,16 +50,32 @@
           <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
           <button class="add" type="submit" name="list" value=<%=listTitle %> >+</button>
         </form>
+
+        <form action="/logout" method="post">
+          <button class="logout" type="submit">Logout</button>
+        </form>
   </div>
 
   <script>
-    function handler(id) {
-      document.getElementById("title" + id).setAttribute("hidden", true)
-      document.getElementById("data" + id).setAttribute("hidden", true)
-      document.getElementById("edit" + id).setAttribute("hidden", true)
-      document.getElementById("done" + id).removeAttribute("hidden")
-      document.getElementById("inputTitle" + id).removeAttribute("hidden")
-      document.getElementById("inputData" + id).removeAttribute("hidden")
+    function handler(id, data) {
+      document.getElementById("title" + id).setAttribute("hidden", true);
+      document.getElementById("data" + id).setAttribute("hidden", true);
+      document.getElementById("edit" + id).setAttribute("hidden", true);
+      document.getElementById("done" + id).removeAttribute("hidden");
+      document.getElementById("inputTitle" + id).removeAttribute("hidden");
+      document.getElementById("inputData" + id).removeAttribute("hidden");
+
+      // post request for setting a cookie with this note's id
+      fetch("/getNoteId", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: id,
+          data: data,
+        }),
+      });
     }
   </script>
 </main>

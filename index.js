@@ -33,11 +33,11 @@ db.connect();
 let items = [];
 
 app.get("/landing", (req, res) => {
-  res.sendFile("/views/landing.html", { root: __dirname });
+  res.sendFile("/views/landing.jsx", { root: __dirname });
 });
 
 app.get("/signup", (req, res) => {
-  res.sendFile("/views/signup.html", { root: __dirname });
+  res.sendFile("/views/signup.jsx", { root: __dirname });
 });
 app.post("/signup", async (req, res) => {
   const name = req.body.name;
@@ -79,7 +79,7 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.sendFile("/views/login.html", { root: __dirname });
+  res.sendFile("/views/login.jsx", { root: __dirname });
 });
 app.post("/login", async (req, res) => {
   const email = req.body.email;

@@ -15,11 +15,11 @@ function Note({ note, onDelete, onUpdate }) {
       const selection = window.getSelection();
       const range = document.createRange();
       
-      // Preserve the cursor position
+      
       const startOffset = selection.rangeCount > 0 ? selection.getRangeAt(0).startOffset : 0;
       mainEl.current.innerHTML = html;
 
-      // Restore the cursor position
+      
       range.setStart(mainEl.current.firstChild, Math.min(startOffset, mainEl.current.firstChild.length));
       range.collapse(true);
       selection.removeAllRanges();
@@ -29,7 +29,7 @@ function Note({ note, onDelete, onUpdate }) {
 
   const execCommand = (command, value = null) => {
     document.execCommand(command, false, value);
-    updateActiveButtons(); // Update button states after executing the command
+    updateActiveButtons(); 
   };
 
   const handleInput = () => {
@@ -39,7 +39,7 @@ function Note({ note, onDelete, onUpdate }) {
       lastHtml.current = newHtml;
       onUpdate({ text: mainEl.current.innerText, html: newHtml });
     }
-    updateActiveButtons(); // Update button states while typing
+    updateActiveButtons();
   };
 
   const updateActiveButtons = () => {
@@ -90,8 +90,8 @@ function Note({ note, onDelete, onUpdate }) {
         contentEditable="true"
         ref={mainEl}
         onInput={handleInput}
-        onKeyUp={updateActiveButtons} // Update buttons when the user presses a key
-        onMouseUp={updateActiveButtons} // Update buttons when the user selects text with the mouse
+        onKeyUp={updateActiveButtons} 
+        onMouseUp={updateActiveButtons} 
         dir="ltr"
         style={{ whiteSpace: 'pre-wrap' }}
       ></div>

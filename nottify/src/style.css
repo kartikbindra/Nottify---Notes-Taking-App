@@ -12,7 +12,7 @@ body {
   display: flex;
   flex-direction: column;
   padding-top: 15rem;
-  align-items: flex-start; /* Aligns items to the start (left) */
+  align-items: flex-start; 
 }
 
 h2 {
@@ -42,9 +42,9 @@ h2 {
 .notes-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; /* Space between notes */
+  gap: 20px; 
   padding: 2rem 4rem;
-  justify-content: flex-start; /* Start from the left */
+  justify-content: flex-start; 
 }
 
 .note-wrapper {

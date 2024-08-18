@@ -12,34 +12,34 @@ function NoteApp() {
   }, [notes]);
 
   const addNote = () => {
-    setNotes([...notes, { text: '', html: '' }]);
+    setNotes([...notes, { id: Date.now(), text: '', html: '' }]);
   };
 
-  const updateNote = (index, newNote) => {
-    const newNotes = notes.slice();
-    newNotes[index] = newNote;
+  const updateNote = (id, newNote) => {
+    const newNotes = notes.map(note => 
+      note.id === id ? { ...note, ...newNote } : note
+    );
     setNotes(newNotes);
   };
 
-  const deleteNote = (index) => {
-    const newNotes = notes.slice();
-    newNotes.splice(index, 1);
+  const deleteNote = (id) => {
+    const newNotes = notes.filter(note => note.id !== id);
     setNotes(newNotes);
   };
 
   return (
     <div>
-      <h2>Nottify-A Note Making App</h2>
+      <h2>Nottify - A Note Making App</h2>
       <button className="btn_add" onClick={addNote}>
         <i className="fas fa-pencil"></i> Add Note
       </button>
       <div className="notes-container">
-        {notes.map((note, index) => (
+        {notes.map(note => (
           <Note
-            key={index}
+            key={note.id} 
             note={note}
-            onDelete={() => deleteNote(index)}
-            onUpdate={(newNote) => updateNote(index, newNote)}
+            onDelete={() => deleteNote(note.id)} 
+            onUpdate={(newNote) => updateNote(note.id, newNote)} 
           />
         ))}
       </div>
